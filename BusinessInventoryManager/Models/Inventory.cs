@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessInventoryManager.Models
 {
@@ -17,6 +18,7 @@ namespace BusinessInventoryManager.Models
         public int Stock { get; set; }
         [Required]
         [Range(0.01, 9999)]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
     }
 
