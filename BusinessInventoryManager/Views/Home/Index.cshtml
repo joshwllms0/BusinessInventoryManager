@@ -1,8 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <h1>Business Inventory Manager</h1>
+    <p>A simple inventory system for small businesses to track products, stock levels, prices, and categories.</p>
+
+    <div class="hero-actions">
+        <a class="btn btn-primary" asp-controller="Inventory" asp-action="Index">View Inventory</a>
+        <a class="btn btn-secondary" asp-controller="Inventory" asp-action="Create">Add New Item</a>
+    </div>
+</section>
+
+<section class="card-grid">
+    <div class="card">
+        <h3>Track Stock</h3>
+        <p>View current inventory levels and identify low-stock items.</p>
+    </div>
+
+    <div class="card">
+        <h3>Manage Items</h3>
+        <p>Create, edit, view, and delete inventory records.</p>
+    </div>
+
+    <div class="card">
+        <h3>Support Decisions</h3>
+        <p>Help managers understand item prices, categories, and stock value.</p>
+    </div>
+</section>
