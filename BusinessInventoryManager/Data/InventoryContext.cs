@@ -11,5 +11,14 @@ namespace BusinessInventoryManager.Data
         }
 
         public DbSet<Inventory> Inventory { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.Manager)
+                .WithMany(e => e.Subordinates)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
