@@ -34,6 +34,27 @@
     </div>
 </section>
 
+<form method="get" asp-action="Index" class="filter-bar">
+    <input type="text" name="search" value="@ViewBag.CurrentSearch" placeholder="Search by name..." />
+    <select name="category">
+        <option value="">All Categories</option>
+
+        @foreach (var cat in Enum.GetValues<Category>())
+        {
+            <option value="@cat" selected="@(ViewBag.CurrentCategory?.ToString() == cat.ToString())">@cat</option>
+        }
+    </select>
+
+    <select name="sort">
+        <option value="">Sort: Default</option>
+        <option value="stock_asc" selected="@(ViewBag.CurrentSort == "stock_asc")">Stock: Low to High</option>
+        <option value="price_desc" selected="@(ViewBag.CurrentSort == "price_desc")">Price: High to Low</option>
+    </select>
+
+    <button type="submit" class="btn btn-primary">Apply</button>
+    <a asp-action="Index" class="btn btn-secondary">Clear</a>
+</form>
+
 <div class="table-card">
     <table class="inventory-table">
         <thead>

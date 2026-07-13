@@ -14,10 +14,28 @@ namespace BusinessInventoryManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, Category? category, string? sort)
         {
-            var result = await _context.Inventory.ToListAsync();
-            return View(result);
+            var query = _context.Inventory.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(i => i.ItemName.Contains(search));
+
+            if (category.HasValue)
+                query = query.Where(i => i.Category == category.Value);
+
+            query = sort switch
+            {
+                "stock_asc" => query.OrderBy(i => i.Stock),
+                "price_desc" => query.OrderByDescending(i => (double)i.Price),
+                _ => query.OrderBy(i => i.ItemName)
+            };
+
+            ViewBag.CurrentSearch = search;
+            ViewBag.CurrentCategory = category;
+            ViewBag.CurrentSort = sort;
+
+            return View(await query.ToListAsync());
         }
 
         public IActionResult Create()

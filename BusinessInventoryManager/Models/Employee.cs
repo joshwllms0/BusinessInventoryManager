@@ -4,8 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessInventoryManager.Models
 {
-    public class Employee : Controller
+    public class Employee
     {
+        [Key]
         public int EmpId { get; set; }
 
         [Required]
