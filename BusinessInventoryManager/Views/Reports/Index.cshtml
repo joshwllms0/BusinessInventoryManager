@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Manager tools</span>
+        <h1>Inventory Reports</h1>
+        <p>
+            Review product quantities, inventory value,
+            low-stock items, and category performance.
+        </p>
+    </div>
+</div>
+
+<section class="summary-grid">
+    <div class="summary-card">
+        <span>Total Products</span>
+        <strong>@ViewBag.TotalProducts</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Low Stock</span>
+        <strong>@ViewBag.LowStockCount</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Out of Stock</span>
+        <strong>@ViewBag.OutOfStockCount</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Inventory Value</span>
+        <strong>
+            @(((decimal)ViewBag.TotalInventoryValue).ToString("C"))
+        </strong>
+    </div>
+</section>
+
+<section class="card-grid dashboard-links">
+    <a class="card dashboard-link"
+       asp-action="LowStock">
+        <h2>Low-Stock Report</h2>
+        <p>View active products with fewer than five units remaining.</p>
+    </a>
+
+    <a class="card dashboard-link"
+       asp-action="OutOfStock">
+        <h2>Out-of-Stock Report</h2>
+        <p>Identify products that currently have no available stock.</p>
+    </a>
+
+    <a class="card dashboard-link"
+       asp-action="Category">
+        <h2>Category Report</h2>
+        <p>Filter inventory by grocery category and department.</p>
+    </a>
+
+    <a class="card dashboard-link"
+       asp-controller="InventoryTransactions"
+       asp-action="History">
+        <h2>Transaction History</h2>
+        <p>Review stock additions, removals, adjustments, and losses.</p>
+    </a>
+
+    <a class="card dashboard-link"
+       asp-controller="EmployeeManagement"
+       asp-action="Index">
+        <h2>Employee Activity</h2>
+        <p>Review employee accounts and recorded inventory activity.</p>
+    </a>
+</section>

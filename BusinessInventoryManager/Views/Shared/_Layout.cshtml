@@ -8,15 +8,49 @@
 </head>
 <body>
     <header class="site-header">
-        <nav class="nav">
-            <a class="brand" asp-controller="Home" asp-action="Index">Business Inventory Manager</a>
-            <div class="nav-links">
-                <a asp-controller="Home" asp-action="Index">Home</a>
-                <a asp-controller="Inventory" asp-action="Index">Inventory</a>
-                <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </nav>
-    </header>
+    <nav class="nav">
+        <a class="brand"
+           asp-controller="Dashboard"
+           asp-action="Index">
+            Business Inventory Manager
+        </a>
+
+        <div class="nav-links">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Dashboard"
+                   asp-action="Index">
+                    Dashboard
+                </a>
+
+                <a asp-controller="Products"
+                   asp-action="Index">
+                    Products
+                </a>
+
+                <a asp-controller="InventoryTransactions"
+                   asp-action="History">
+                    Stock Activity
+                </a>
+
+                @if (User.IsInRole("Manager"))
+                {
+                    <a asp-controller="EmployeeManagement"
+                       asp-action="Index">
+                        Employees
+                    </a>
+
+                    <a asp-controller="Reports"
+                       asp-action="Index">
+                        Reports
+                    </a>
+                }
+            }
+
+            <partial name="_LoginPartial" />
+        </div>
+    </nav>
+</header>
 
     <main class="container">
         @RenderBody()

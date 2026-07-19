@@ -1,0 +1,120 @@
+@model IEnumerable<
+    BusinessInventoryManager.ViewModels.Employees.EmployeeDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Manage Employees";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Manager tools</span>
+        <h1>Manage Employees</h1>
+        <p>
+            Create employee accounts, assign departments and roles,
+            and review employee inventory activity.
+        </p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        Add Employee
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Manager</th>
+                <th>Status</th>
+                <th>Transactions</th>
+                <th>Last Activity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong>@employee.FullName</strong>
+                        </td>
+
+                        <td>@employee.Email</td>
+                        <td>@employee.Role</td>
+                        <td>@employee.DepartmentName</td>
+                        <td>@employee.ManagerName</td>
+
+                        <td>
+                            @if (employee.IsActive)
+                            {
+                                <span class="status-badge status-active">
+                                    Active
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status-badge status-inactive">
+                                    Inactive
+                                </span>
+                            }
+                        </td>
+
+                        <td>@employee.TransactionCount</td>
+
+                        <td>
+                            @(employee.LastActivity?.ToLocalTime()
+                                .ToString("g") ?? "No activity")
+                        </td>
+
+                        <td class="action-links">
+                            <a asp-action="Details"
+                               asp-route-id="@employee.Id">
+                                Details
+                            </a>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@employee.Id">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                               asp-route-id="@employee.Id"
+                               class="danger-link">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" class="empty-message">
+                        No employee accounts were found.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

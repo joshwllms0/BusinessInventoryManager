@@ -1,0 +1,68 @@
+@model BusinessInventoryManager.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Remove Employee";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Employee accounts</span>
+        <h1>Remove Employee</h1>
+        <p>
+            Accounts with inventory history will be deactivated
+            rather than permanently deleted.
+        </p>
+    </div>
+</div>
+
+<section class="form-card delete-card">
+    <div class="alert alert-warning">
+        Are you sure you want to remove
+        <strong>@Model.FullName</strong>?
+    </div>
+
+    <dl class="details-grid">
+        <div>
+            <dt>Name</dt>
+            <dd>@Model.FullName</dd>
+        </div>
+
+        <div>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
+        </div>
+
+        <div>
+            <dt>Status</dt>
+            <dd>
+                @(Model.IsActive ? "Active" : "Inactive")
+            </dd>
+        </div>
+
+        <div>
+            <dt>Created</dt>
+            <dd>
+                @Model.CreatedAt.ToLocalTime().ToString("g")
+            </dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.Id"
+          method="post">
+
+        <input asp-for="Id" type="hidden" />
+
+        <div class="form-actions">
+            <button type="submit"
+                    class="btn btn-danger">
+                Remove Employee
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>

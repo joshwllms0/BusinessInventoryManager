@@ -1,0 +1,230 @@
+@model BusinessInventoryManager.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+
+    var recentTransactions = Model.Transactions
+        .OrderByDescending(transaction =>
+            transaction.TransactionDate)
+        .Take(10);
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Product catalog</span>
+        <h1>@Model.ProductName</h1>
+        <p>@Model.SKU</p>
+    </div>
+
+    <div class="page-actions">
+        <a asp-controller="InventoryTransactions"
+           asp-action="Create"
+           asp-route-productId="@Model.ProductId"
+           class="btn btn-primary">
+            Update Stock
+        </a>
+
+        @if (User.IsInRole("Manager"))
+        {
+            <a asp-action="Edit"
+               asp-route-id="@Model.ProductId"
+               class="btn btn-secondary">
+                Edit Product
+            </a>
+
+            <a asp-action="Delete"
+               asp-route-id="@Model.ProductId"
+               class="btn btn-danger">
+                Remove Product
+            </a>
+        }
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<section class="details-card">
+    <div class="details-grid">
+        <div>
+            <dt>SKU</dt>
+            <dd>@Model.SKU</dd>
+        </div>
+
+        <div>
+            <dt>Brand</dt>
+            <dd>@Model.Brand.BrandName</dd>
+        </div>
+
+        <div>
+            <dt>Department</dt>
+            <dd>
+                @Model.Category.Department.DepartmentName
+            </dd>
+        </div>
+
+        <div>
+            <dt>Category</dt>
+            <dd>@Model.Category.CategoryName</dd>
+        </div>
+
+        <div>
+            <dt>Flavor</dt>
+            <dd>
+                @(string.IsNullOrWhiteSpace(Model.Flavor)
+                    ? "Not specified"
+                    : Model.Flavor)
+            </dd>
+        </div>
+
+        <div>
+            <dt>Size</dt>
+            <dd>
+                @if (string.IsNullOrWhiteSpace(Model.Size))
+                {
+                    <span>Not specified</span>
+                }
+                else
+                {
+                    <span>
+                        @Model.Size @Model.UnitOfMeasure
+                    </span>
+                }
+            </dd>
+        </div>
+
+        <div>
+            <dt>Unit Price</dt>
+            <dd>@Model.UnitPrice.ToString("C")</dd>
+        </div>
+
+        <div>
+            <dt>Quantity in Stock</dt>
+            <dd>
+                <span class="stock-badge @(Model.QuantityInStock <= Model.ReorderLevel
+                    ? "stock-low"
+                    : "stock-normal")">
+                    @Model.QuantityInStock
+                </span>
+            </dd>
+        </div>
+
+        <div>
+            <dt>Reorder Level</dt>
+            <dd>@Model.ReorderLevel</dd>
+        </div>
+
+        <div>
+            <dt>Status</dt>
+            <dd>
+                @(Model.IsActive ? "Active" : "Inactive")
+            </dd>
+        </div>
+
+        <div>
+            <dt>Created</dt>
+            <dd>
+                @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("g")
+            </dd>
+        </div>
+
+        <div>
+            <dt>Last Updated</dt>
+            <dd>
+                @(Model.UpdatedAt?.ToLocalTime().ToString("g")
+                    ?? "Never")
+            </dd>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="product-description">
+            <h2>Description</h2>
+            <p>@Model.Description</p>
+        </div>
+    }
+</section>
+
+<section class="section-header">
+    <div>
+        <h2>Recent Stock Activity</h2>
+        <p>The ten most recent changes made to this product.</p>
+    </div>
+
+    <a asp-controller="InventoryTransactions"
+       asp-action="History"
+       asp-route-productId="@Model.ProductId"
+       class="btn btn-secondary">
+        View Full History
+    </a>
+</section>
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Employee</th>
+                <th>Type</th>
+                <th>Change</th>
+                <th>Previous</th>
+                <th>New</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (recentTransactions.Any())
+            {
+                foreach (var transaction in recentTransactions)
+                {
+                    <tr>
+                        <td>
+                            @transaction.TransactionDate
+                                .ToLocalTime()
+                                .ToString("g")
+                        </td>
+
+                        <td>
+                            @transaction.Employee.FullName
+                        </td>
+
+                        <td>
+                            @transaction.TransactionType
+                        </td>
+
+                        <td>
+                            <span class="@(transaction.QuantityChange >= 0
+                                ? "quantity-positive"
+                                : "quantity-negative")">
+                                @(transaction.QuantityChange > 0
+                                    ? $"+{transaction.QuantityChange}"
+                                    : transaction.QuantityChange.ToString())
+                            </span>
+                        </td>
+
+                        <td>@transaction.PreviousQuantity</td>
+                        <td>@transaction.NewQuantity</td>
+                        <td>@(transaction.Notes ?? "—")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7"
+                        class="empty-message">
+                        No stock changes have been recorded for this product.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

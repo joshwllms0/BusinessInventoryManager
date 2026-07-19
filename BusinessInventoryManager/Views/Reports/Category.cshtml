@@ -1,0 +1,54 @@
+@model IEnumerable<BusinessInventoryManager.Models.Product>
+
+@{
+    ViewData["Title"] = "Category Report";
+
+    var categories =
+        ViewBag.Categories as IEnumerable<
+            BusinessInventoryManager.Models.Category>;
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Inventory report</span>
+        <h1>Category Report</h1>
+        <p>Review inventory within a selected grocery category.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back to Reports
+    </a>
+</div>
+
+<form asp-action="Category"
+      method="get"
+      class="filter-bar">
+
+    <div class="form-group">
+        <label for="categoryId">Category</label>
+
+        <select id="categoryId"
+                name="categoryId"
+                class="form-control">
+            <option value="">All categories</option>
+
+            @if (categories != null)
+            {
+                foreach (var category in categories)
+                {
+                    <option value="@category.CategoryId"
+                            selected="@(ViewBag.SelectedCategoryId == category.CategoryId)">
+                        @category.Department.DepartmentName —
+                        @category.CategoryName
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Run Report
+    </button>
+</form>
+
+<partial name="_ProductReportTable" model="Model" />

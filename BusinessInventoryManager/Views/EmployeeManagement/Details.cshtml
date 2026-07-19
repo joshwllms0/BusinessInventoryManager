@@ -1,0 +1,207 @@
+@model BusinessInventoryManager.ViewModels.Employees.EmployeeDetailsViewModel
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Employee account</span>
+        <h1>@Model.FullName</h1>
+        <p>
+            Review account information and recent inventory activity.
+        </p>
+    </div>
+
+    <div class="page-actions">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            Edit Employee
+        </a>
+
+        <a asp-action="Report"
+           asp-route-id="@Model.Id"
+           class="btn btn-secondary">
+            Full Activity Report
+        </a>
+
+        <a asp-action="Delete"
+           asp-route-id="@Model.Id"
+           class="btn btn-danger">
+            Remove Employee
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Employees
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<section class="details-card">
+    <div class="details-grid">
+        <div>
+            <dt>Employee Name</dt>
+            <dd>@Model.FullName</dd>
+        </div>
+
+        <div>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
+        </div>
+
+        <div>
+            <dt>Role</dt>
+            <dd>
+                <span class="status-badge">
+                    @Model.Role
+                </span>
+            </dd>
+        </div>
+
+        <div>
+            <dt>Department</dt>
+            <dd>@Model.DepartmentName</dd>
+        </div>
+
+        <div>
+            <dt>Assigned Manager</dt>
+            <dd>@Model.ManagerName</dd>
+        </div>
+
+        <div>
+            <dt>Account Status</dt>
+            <dd>
+                @if (Model.IsActive)
+                {
+                    <span class="status-badge status-active">
+                        Active
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-inactive">
+                        Inactive
+                    </span>
+                }
+            </dd>
+        </div>
+
+        <div>
+            <dt>Account Created</dt>
+            <dd>
+                @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("MMM d, yyyy h:mm tt")
+            </dd>
+        </div>
+
+        <div>
+            <dt>Total Stock Transactions</dt>
+            <dd>@Model.TransactionCount</dd>
+        </div>
+
+        <div>
+            <dt>Most Recent Activity</dt>
+            <dd>
+                @(Model.LastActivity.HasValue
+                    ? Model.LastActivity.Value
+                        .ToLocalTime()
+                        .ToString("MMM d, yyyy h:mm tt")
+                    : "No inventory activity")
+            </dd>
+        </div>
+    </div>
+</section>
+
+<section class="section-header">
+    <div>
+        <h2>Recent Inventory Activity</h2>
+        <p>
+            The ten most recent stock changes recorded by this employee.
+        </p>
+    </div>
+
+    <a asp-controller="InventoryTransactions"
+       asp-action="History"
+       asp-route-employeeId="@Model.Id"
+       class="btn btn-secondary">
+        View Full History
+    </a>
+</section>
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Type</th>
+                <th>Change</th>
+                <th>Previous</th>
+                <th>New</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.RecentTransactions.Any())
+            {
+                foreach (var transaction in Model.RecentTransactions)
+                {
+                    <tr>
+                        <td>
+                            @transaction.TransactionDate
+                                .ToLocalTime()
+                                .ToString("g")
+                        </td>
+
+                        <td>
+                            <a asp-controller="Products"
+                               asp-action="Details"
+                               asp-route-id="@transaction.ProductId">
+                                @transaction.Product.ProductName
+                            </a>
+                        </td>
+
+                        <td>@transaction.Product.SKU</td>
+
+                        <td>@transaction.TransactionType</td>
+
+                        <td>
+                            <span class="@(transaction.QuantityChange >= 0
+                                ? "quantity-positive"
+                                : "quantity-negative")">
+                                @(transaction.QuantityChange > 0
+                                    ? $"+{transaction.QuantityChange}"
+                                    : transaction.QuantityChange.ToString())
+                            </span>
+                        </td>
+
+                        <td>@transaction.PreviousQuantity</td>
+                        <td>@transaction.NewQuantity</td>
+                        <td>@(transaction.Notes ?? "—")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8"
+                        class="empty-message">
+                        This employee has not recorded any inventory changes.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

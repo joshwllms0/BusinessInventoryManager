@@ -1,0 +1,170 @@
+@model BusinessInventoryManager.ViewModels.Products.ProductFormViewModel
+
+@{
+    ViewData["Title"] = "Add Product";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Product catalog</span>
+        <h1>Add Product</h1>
+        <p>Create a grocery product and assign its category and location.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancel
+    </a>
+</div>
+
+<form asp-action="Create"
+      method="post"
+      class="form-card">
+
+    <div asp-validation-summary="ModelOnly"
+         class="validation-summary"></div>
+
+    <div class="form-grid">
+        <div class="form-group">
+            <label asp-for="SKU"></label>
+            <input asp-for="SKU" />
+            <span asp-validation-for="SKU"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ProductName"></label>
+            <input asp-for="ProductName" />
+            <span asp-validation-for="ProductName"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group form-group-wide">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" rows="3"></textarea>
+            <span asp-validation-for="Description"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DepartmentId"></label>
+            <select asp-for="DepartmentId"
+                    asp-items="Model.Departments"
+                    id="department-select">
+                <option value="">Select department</option>
+            </select>
+            <span asp-validation-for="DepartmentId"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CategoryId"></label>
+            <select asp-for="CategoryId"
+                    asp-items="Model.Categories"
+                    id="category-select">
+                <option value="">Select category</option>
+            </select>
+            <span asp-validation-for="CategoryId"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="BrandId"></label>
+            <select asp-for="BrandId"
+                    asp-items="Model.Brands">
+                <option value="">Select brand</option>
+            </select>
+            <span asp-validation-for="BrandId"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Flavor"></label>
+            <input asp-for="Flavor" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Size"></label>
+            <input asp-for="Size" placeholder="Example: 16" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UnitOfMeasure"></label>
+            <select asp-for="UnitOfMeasure"
+                    asp-items="Model.Units">
+                <option value="">Select unit</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UnitPrice"></label>
+            <input asp-for="UnitPrice" step="0.01" />
+            <span asp-validation-for="UnitPrice"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="QuantityInStock"></label>
+            <input asp-for="QuantityInStock" />
+            <span asp-validation-for="QuantityInStock"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ReorderLevel"></label>
+            <input asp-for="ReorderLevel" />
+            <span asp-validation-for="ReorderLevel"
+                  class="validation-message"></span>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            Save Product
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const departmentSelect =
+            document.getElementById("department-select");
+
+        const categorySelect =
+            document.getElementById("category-select");
+
+        const locationSelect =
+            document.getElementById("location-select");
+
+        departmentSelect.addEventListener("change", async function () {
+            const departmentId = this.value;
+
+            categorySelect.innerHTML =
+                '<option value="">Select category</option>';
+
+            locationSelect.innerHTML =
+                '<option value="">Select location</option>';
+
+            if (!departmentId) {
+                return;
+            }
+
+            const categoryResponse = await fetch(
+                `/Products/CategoriesByDepartment?departmentId=${departmentId}`
+            );
+
+            const categories = await categoryResponse.json();
+
+            categories.forEach(category => {
+                categorySelect.add(
+                    new Option(category.text, category.value)
+                );
+            });
+        });
+    </script>
+}

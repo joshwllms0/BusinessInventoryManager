@@ -1,0 +1,30 @@
+@using BusinessInventoryManager.Models
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <span class="user-summary">
+        @User.Identity?.Name
+    </span>
+
+    <form asp-controller="Account"
+          asp-action="Logout"
+          method="post"
+          class="logout-form">
+
+        <button type="submit"
+                class="nav-button">
+            Log Out
+        </button>
+    </form>
+}
+else
+{
+    <a asp-controller="Account"
+       asp-action="Login">
+        Log In
+    </a>
+}
