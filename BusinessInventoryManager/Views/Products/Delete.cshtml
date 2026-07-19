@@ -1,0 +1,76 @@
+@model BusinessInventoryManager.Models.Product
+
+@{
+    ViewData["Title"] = "Remove Product";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Product catalog</span>
+        <h1>Remove Product</h1>
+        <p>
+            This product will be deactivated and removed from
+            the active inventory list.
+        </p>
+    </div>
+</div>
+
+<section class="form-card delete-card">
+    <div class="alert alert-warning">
+        Are you sure you want to remove
+        <strong>@Model.ProductName</strong>?
+    </div>
+
+    <dl class="details-grid">
+        <div>
+            <dt>SKU</dt>
+            <dd>@Model.SKU</dd>
+        </div>
+
+        <div>
+            <dt>Brand</dt>
+            <dd>@Model.Brand.BrandName</dd>
+        </div>
+
+        <div>
+            <dt>Department</dt>
+            <dd>
+                @Model.Category.Department.DepartmentName
+            </dd>
+        </div>
+
+        <div>
+            <dt>Category</dt>
+            <dd>@Model.Category.CategoryName</dd>
+        </div>
+
+        <div>
+            <dt>Current Stock</dt>
+            <dd>@Model.QuantityInStock</dd>
+        </div>
+
+        <div>
+            <dt>Price</dt>
+            <dd>@Model.UnitPrice.ToString("C")</dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.ProductId"
+          method="post">
+
+        <input asp-for="ProductId" type="hidden" />
+
+        <div class="form-actions">
+            <button type="submit"
+                    class="btn btn-danger">
+                Remove Product
+            </button>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</section>

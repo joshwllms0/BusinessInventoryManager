@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Inventory overview</span>
+        <h1>Dashboard</h1>
+        <p>
+            Review current stock levels, product activity,
+            and inventory status.
+        </p>
+    </div>
+
+    @if (User.IsInRole("Manager"))
+    {
+        <a asp-controller="Products"
+           asp-action="Create"
+           class="btn btn-primary">
+            Add Product
+        </a>
+    }
+</div>
+
+<section class="summary-grid">
+    <div class="summary-card">
+        <span>Total Products</span>
+        <strong>@ViewBag.TotalProducts</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Low Stock</span>
+        <strong>@ViewBag.LowStockProducts</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Out of Stock</span>
+        <strong>@ViewBag.OutOfStockProducts</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Inventory Value</span>
+        <strong>@(((decimal)ViewBag.TotalInventoryValue).ToString("C"))</strong>
+    </div>
+
+    @if (User.IsInRole("Manager"))
+    {
+        <div class="summary-card">
+            <span>Active Employees</span>
+            <strong>@ViewBag.ActiveEmployees</strong>
+        </div>
+    }
+</section>
+
+<section class="card-grid dashboard-links">
+    <a class="card dashboard-link"
+       asp-controller="Products"
+       asp-action="Index">
+        <h2>Manage Products</h2>
+        <p>Search products, check quantities, and review store locations.</p>
+    </a>
+
+    <a class="card dashboard-link"
+       asp-controller="InventoryTransactions"
+       asp-action="History">
+        <h2>Stock Activity</h2>
+        <p>Review stock additions, removals, damage, and adjustments.</p>
+    </a>
+
+    @if (User.IsInRole("Manager"))
+    {
+        <a class="card dashboard-link"
+           asp-controller="EmployeeManagement"
+           asp-action="Index">
+            <h2>Manage Employees</h2>
+            <p>Create accounts, assign roles, and review employee activity.</p>
+        </a>
+
+        <a class="card dashboard-link"
+           asp-controller="Reports"
+           asp-action="Index">
+            <h2>Reports</h2>
+            <p>Review low stock, category totals, inventory value, and activity.</p>
+        </a>
+    }
+</section>

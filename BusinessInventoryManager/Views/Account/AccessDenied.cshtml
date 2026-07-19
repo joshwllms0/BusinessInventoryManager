@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<section class="status-card">
+    <span class="eyebrow">Permission required</span>
+    <h1>Access denied</h1>
+
+    <p>
+        Your account does not have permission to access this page.
+    </p>
+
+    <a asp-controller="Dashboard"
+       asp-action="Index"
+       class="btn btn-primary">
+        Return to Dashboard
+    </a>
+</section>

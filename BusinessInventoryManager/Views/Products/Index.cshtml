@@ -1,0 +1,126 @@
+@model IEnumerable<BusinessInventoryManager.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Product catalog</span>
+        <h1>Products</h1>
+        <p>Review grocery products, current stock levels, prices, and store locations.</p>
+    </div>
+
+    @if (User.IsInRole("Manager"))
+    {
+        <a asp-action="Create"
+           class="btn btn-primary">
+            Add Product
+        </a>
+    }
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>SKU</th>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Department</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var product in Model)
+                {
+                    <tr class="@(product.QuantityInStock < 5
+                        ? "low-stock-row"
+                        : "")">
+
+                        <td>@product.SKU</td>
+
+                        <td>
+                            <strong>@product.ProductName</strong>
+
+                            @if (!string.IsNullOrWhiteSpace(product.Size))
+                            {
+                                <div class="table-subtext">
+                                    @product.Size
+                                    @product.UnitOfMeasure
+                                </div>
+                            }
+                        </td>
+
+                        <td>@product.Brand.BrandName</td>
+
+                        <td>
+                            @product.Category.Department.DepartmentName
+                        </td>
+
+                        <td>@product.Category.CategoryName</td>
+
+                        <td>
+                            <span class="stock-badge @(product.QuantityInStock < 5
+                                ? "stock-low"
+                                : "stock-normal")">
+                                @product.QuantityInStock
+                            </span>
+                        </td>
+
+                        <td>@product.UnitPrice.ToString("C")</td>
+
+                        <td class="action-links">
+                            <a asp-action="Details"
+                            asp-route-id="@product.ProductId">
+                                Details
+                            </a>
+
+                            <a asp-controller="InventoryTransactions"
+                            asp-action="Create"
+                            asp-route-productId="@product.ProductId">
+                                Update Stock
+                            </a>
+
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a asp-action="Edit"
+                                asp-route-id="@product.ProductId">
+                                    Edit
+                                </a>
+
+                                <a asp-action="Delete"
+                                asp-route-id="@product.ProductId"
+                                class="danger-link">
+                                    Remove
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8"
+                        class="empty-message">
+                        No products have been created yet.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

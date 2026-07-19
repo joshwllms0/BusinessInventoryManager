@@ -1,0 +1,279 @@
+@model BusinessInventoryManager.ViewModels.Employees.EmployeeActivityReportViewModel
+
+@{
+    ViewData["Title"] = "Employee Activity Report";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Employee report</span>
+        <h1>@Model.EmployeeName</h1>
+        <p>
+            Review inventory activity recorded by this employee.
+        </p>
+    </div>
+
+    <div class="page-actions">
+        <button type="button"
+                class="btn btn-primary"
+                onclick="window.print()">
+            Print Report
+        </button>
+
+        <a asp-action="Details"
+           asp-route-id="@Model.EmployeeId"
+           class="btn btn-secondary">
+            Employee Details
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Employees
+        </a>
+    </div>
+</div>
+
+<div asp-validation-summary="ModelOnly"
+     class="validation-summary"></div>
+
+<section class="details-card report-employee-summary">
+    <div class="details-grid">
+        <div>
+            <dt>Employee</dt>
+            <dd>@Model.EmployeeName</dd>
+        </div>
+
+        <div>
+            <dt>Email</dt>
+            <dd>@Model.Email</dd>
+        </div>
+
+        <div>
+            <dt>Role</dt>
+            <dd>@Model.Role</dd>
+        </div>
+
+        <div>
+            <dt>Department</dt>
+            <dd>@Model.DepartmentName</dd>
+        </div>
+
+        <div>
+            <dt>Account Status</dt>
+            <dd>
+                @if (Model.IsActive)
+                {
+                    <span class="status-badge status-active">
+                        Active
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-inactive">
+                        Inactive
+                    </span>
+                }
+            </dd>
+        </div>
+
+        <div>
+            <dt>Report Period</dt>
+            <dd>
+                @if (Model.StartDate.HasValue ||
+                     Model.EndDate.HasValue)
+                {
+                    <span>
+                        @(Model.StartDate?.ToString("MMM d, yyyy")
+                            ?? "Beginning")
+                        –
+                        @(Model.EndDate?.ToString("MMM d, yyyy")
+                            ?? "Present")
+                    </span>
+                }
+                else
+                {
+                    <span>All activity</span>
+                }
+            </dd>
+        </div>
+    </div>
+</section>
+
+<section class="form-card report-filter-card">
+    <form asp-action="Report"
+          asp-route-id="@Model.EmployeeId"
+          method="get">
+
+        <input type="hidden"
+               name="id"
+               value="@Model.EmployeeId" />
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+
+                <input id="startDate"
+                       name="startDate"
+                       type="date"
+                       value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+
+                <input id="endDate"
+                       name="endDate"
+                       type="date"
+                       value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit"
+                    class="btn btn-primary">
+                Apply Date Filter
+            </button>
+
+            <a asp-action="Report"
+               asp-route-id="@Model.EmployeeId"
+               class="btn btn-secondary">
+                Clear Filter
+            </a>
+        </div>
+    </form>
+</section>
+
+<section class="report-summary-grid">
+    <article class="summary-card">
+        <span>Total Transactions</span>
+        <strong>@Model.TotalTransactions</strong>
+    </article>
+
+    <article class="summary-card">
+        <span>Units Added</span>
+        <strong class="quantity-positive">
+            +@Model.TotalUnitsAdded
+        </strong>
+    </article>
+
+    <article class="summary-card">
+        <span>Units Removed</span>
+        <strong class="quantity-negative">
+            -@Model.TotalUnitsRemoved
+        </strong>
+    </article>
+
+    <article class="summary-card">
+        <span>Products Affected</span>
+        <strong>@Model.ProductsAffected</strong>
+    </article>
+
+    <article class="summary-card">
+        <span>First Activity</span>
+        <strong class="summary-date">
+            @(Model.FirstActivity.HasValue
+                ? Model.FirstActivity.Value
+                    .ToLocalTime()
+                    .ToString("MMM d, yyyy")
+                : "None")
+        </strong>
+    </article>
+
+    <article class="summary-card">
+        <span>Most Recent Activity</span>
+        <strong class="summary-date">
+            @(Model.LastActivity.HasValue
+                ? Model.LastActivity.Value
+                    .ToLocalTime()
+                    .ToString("MMM d, yyyy")
+                : "None")
+        </strong>
+    </article>
+</section>
+
+<section class="section-header">
+    <div>
+        <h2>Inventory Transactions</h2>
+        <p>
+            Complete activity history for the selected date range.
+        </p>
+    </div>
+</section>
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Type</th>
+                <th>Change</th>
+                <th>Previous</th>
+                <th>New</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Transactions.Any())
+            {
+                foreach (var transaction in Model.Transactions)
+                {
+                    <tr>
+                        <td>
+                            @transaction.TransactionDate
+                                .ToLocalTime()
+                                .ToString("MMM d, yyyy h:mm tt")
+                        </td>
+
+                        <td>
+                            <a asp-controller="Products"
+                               asp-action="Details"
+                               asp-route-id="@transaction.ProductId">
+                                @transaction.Product.ProductName
+                            </a>
+                        </td>
+
+                        <td>@transaction.Product.SKU</td>
+
+                        <td>
+                            @transaction.TransactionType
+                        </td>
+
+                        <td>
+                            <span class="@(transaction.QuantityChange >= 0
+                                ? "quantity-positive"
+                                : "quantity-negative")">
+                                @(transaction.QuantityChange > 0
+                                    ? $"+{transaction.QuantityChange}"
+                                    : transaction.QuantityChange.ToString())
+                            </span>
+                        </td>
+
+                        <td>@transaction.PreviousQuantity</td>
+
+                        <td>@transaction.NewQuantity</td>
+
+                        <td>
+                            @(string.IsNullOrWhiteSpace(
+                                transaction.Notes)
+                                ? "—"
+                                : transaction.Notes)
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="8"
+                        class="empty-message">
+                        No inventory activity was found for this employee
+                        during the selected date range.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

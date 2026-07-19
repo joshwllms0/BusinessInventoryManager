@@ -1,0 +1,19 @@
+@model IEnumerable<BusinessInventoryManager.Models.Product>
+
+@{
+    ViewData["Title"] = "Out-of-Stock Report";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Inventory report</span>
+        <h1>Out-of-Stock Products</h1>
+        <p>Products with a current quantity of zero.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back to Reports
+    </a>
+</div>
+
+<partial name="_ProductReportTable" model="Model" />

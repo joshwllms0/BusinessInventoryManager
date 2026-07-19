@@ -1,0 +1,104 @@
+@model BusinessInventoryManager.ViewModels.InventoryTransactions.CreateTransactionViewModel
+
+@{
+    ViewData["Title"] = "Update Stock";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Inventory activity</span>
+        <h1>Update Stock</h1>
+        <p>
+            Record received, sold, damaged, expired,
+            returned, or adjusted inventory.
+        </p>
+    </div>
+
+    <a asp-controller="Products"
+       asp-action="Details"
+       asp-route-id="@Model.ProductId"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+</div>
+
+<form asp-action="Create"
+      method="post"
+      class="form-card">
+
+    <input asp-for="ProductId" type="hidden" />
+    <input asp-for="SKU" type="hidden" />
+    <input asp-for="ProductName" type="hidden" />
+    <input asp-for="CurrentQuantity" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly"
+         class="validation-summary"></div>
+
+    <section class="transaction-product-summary">
+        <div>
+            <span class="detail-label">Product</span>
+            <strong>@Model.ProductName</strong>
+        </div>
+
+        <div>
+            <span class="detail-label">SKU</span>
+            <strong>@Model.SKU</strong>
+        </div>
+
+        <div>
+            <span class="detail-label">Current Stock</span>
+            <strong>@Model.CurrentQuantity</strong>
+        </div>
+    </section>
+
+    <div class="form-grid">
+        <div class="form-group">
+            <label asp-for="TransactionType"></label>
+
+            <select asp-for="TransactionType"
+                    asp-items="Html.GetEnumSelectList<BusinessInventoryManager.Models.InventoryTransactionType>()">
+            </select>
+
+            <span asp-validation-for="TransactionType"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Quantity"></label>
+            <input asp-for="Quantity"
+                   min="1" />
+
+            <span asp-validation-for="Quantity"
+                  class="validation-message"></span>
+        </div>
+
+        <div class="form-group form-group-wide">
+            <label asp-for="Notes"></label>
+
+            <textarea asp-for="Notes"
+                      rows="4"
+                      placeholder="Example: Weekly delivery received or three damaged packages removed."></textarea>
+
+            <span asp-validation-for="Notes"
+                  class="validation-message"></span>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit"
+                class="btn btn-primary">
+            Record Stock Change
+        </button>
+
+        <a asp-controller="Products"
+           asp-action="Details"
+           asp-route-id="@Model.ProductId"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
