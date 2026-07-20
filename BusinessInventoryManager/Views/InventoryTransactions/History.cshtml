@@ -37,9 +37,7 @@
                 {
                     <tr>
                         <td>
-                            @transaction.TransactionDate
-                                .ToLocalTime()
-                                .ToString("g")
+                            @transaction.TransactionDate.ToLocalTime().ToString("g")
                         </td>
                         <td>@transaction.Product.ProductName</td>
                         <td>@transaction.Employee.FullName</td>

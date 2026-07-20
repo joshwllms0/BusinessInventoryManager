@@ -83,8 +83,7 @@
                         <td>@employee.TransactionCount</td>
 
                         <td>
-                            @(employee.LastActivity?.ToLocalTime()
-                                .ToString("g") ?? "No activity")
+                            @(employee.LastActivity?.ToLocalTime().ToString("g") ?? "No activity")
                         </td>
 
                         <td class="action-links">

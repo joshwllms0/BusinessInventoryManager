@@ -128,17 +128,14 @@
         <div>
             <dt>Created</dt>
             <dd>
-                @Model.CreatedAt
-                    .ToLocalTime()
-                    .ToString("g")
+                @Model.CreatedAt.ToLocalTime().ToString("g")
             </dd>
         </div>
 
         <div>
             <dt>Last Updated</dt>
             <dd>
-                @(Model.UpdatedAt?.ToLocalTime().ToString("g")
-                    ?? "Never")
+                @(Model.UpdatedAt?.ToLocalTime().ToString("g") ?? "Never")
             </dd>
         </div>
     </div>
@@ -187,9 +184,7 @@
                 {
                     <tr>
                         <td>
-                            @transaction.TransactionDate
-                                .ToLocalTime()
-                                .ToString("g")
+                            @transaction.TransactionDate.ToLocalTime().ToString("g")
                         </td>
 
                         <td>

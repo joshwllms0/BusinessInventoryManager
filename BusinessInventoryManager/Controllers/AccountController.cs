@@ -90,6 +90,68 @@ namespace BusinessInventoryManager.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+
+            return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            ApplicationUser? existing =
+                await _userManager.FindByEmailAsync(model.Email);
+
+            if (existing != null)
+            {
+                ModelState.AddModelError(
+                    nameof(model.Email),
+                    "An account with this email already exists.");
+                return View(model);
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                EmailConfirmed = true,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            IdentityResult result =
+                await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (IdentityError error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
+            await _userManager.AddToRoleAsync(user, "Employee");
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return RedirectToAction("Index", "Dashboard");
+        }
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]

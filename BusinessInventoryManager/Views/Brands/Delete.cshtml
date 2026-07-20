@@ -1,0 +1,41 @@
+@model BusinessInventoryManager.Models.Brand
+
+@{
+    ViewData["Title"] = "Delete Brand";
+}
+
+<div class="form-page">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Brands</span>
+            <h1>Delete Brand</h1>
+        </div>
+    </div>
+
+    <div class="warning-card delete-card">
+        <p>Are you sure you want to delete <strong>@Model.BrandName</strong>?</p>
+
+        @if (Model.Products.Any())
+        {
+            <p class="validation-message">
+                This brand cannot be deleted because it has
+                <strong>@Model.Products.Count</strong> active product(s) assigned to it.
+                Remove or reassign those products first.
+            </p>
+
+            <a asp-action="Index" class="btn btn-secondary">Back to Brands</a>
+        }
+        else
+        {
+            <p>This action is permanent and cannot be undone.</p>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="BrandId" />
+                <div class="button-row">
+                    <button type="submit" class="btn btn-danger">Delete Brand</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        }
+    </div>
+</div>

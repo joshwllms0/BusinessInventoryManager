@@ -1,0 +1,67 @@
+@model IEnumerable<BusinessInventoryManager.Models.Department>
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Manager Tools</span>
+        <h1>Departments</h1>
+        <p>Manage store departments and their assigned categories.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add Department</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-error">@TempData["ErrorMessage"]</div>
+}
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Department Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var department in Model)
+                {
+                    <tr>
+                        <td><strong>@department.DepartmentName</strong></td>
+                        <td>@(department.Description ?? "—")</td>
+                        <td>
+                            <div class="action-links">
+                                <a asp-action="Details"
+                                   asp-route-id="@department.DepartmentId">Details</a>
+                                <a asp-action="Edit"
+                                   asp-route-id="@department.DepartmentId">Edit</a>
+                                <a asp-action="Delete"
+                                   asp-route-id="@department.DepartmentId"
+                                   class="danger-link">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="empty-message">
+                        No departments have been added yet.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

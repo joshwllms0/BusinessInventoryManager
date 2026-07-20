@@ -1,0 +1,90 @@
+@model BusinessInventoryManager.Models.Department
+
+@{
+    ViewData["Title"] = Model.DepartmentName;
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Departments</span>
+        <h1>@Model.DepartmentName</h1>
+        <p>@(Model.Description ?? "No description provided.")</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit"
+           asp-route-id="@Model.DepartmentId"
+           class="btn btn-primary">Edit Department</a>
+        <a asp-action="Index"
+           class="btn btn-secondary">Back to Departments</a>
+    </div>
+</div>
+
+<div class="table-card" style="margin-bottom: 1.5rem;">
+    <h2>Categories</h2>
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Categories.Any())
+            {
+                foreach (var category in Model.Categories.OrderBy(c => c.CategoryName))
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Categories"
+                               asp-action="Details"
+                               asp-route-id="@category.CategoryId">
+                                @category.CategoryName
+                            </a>
+                        </td>
+                        <td>@(category.Description ?? "—")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2" class="empty-message">
+                        No categories in this department.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="table-card">
+    <h2>Employees</h2>
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Employees.Any())
+            {
+                foreach (var employee in Model.Employees.OrderBy(e => e.LastName))
+                {
+                    <tr>
+                        <td>@employee.FirstName @employee.LastName</td>
+                        <td>@employee.Email</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="empty-message">
+                        No employees assigned to this department.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

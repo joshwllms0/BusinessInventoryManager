@@ -1,0 +1,43 @@
+@model BusinessInventoryManager.Models.Department
+
+@{
+    ViewData["Title"] = "Delete Department";
+}
+
+<div class="form-page">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Departments</span>
+            <h1>Delete Department</h1>
+        </div>
+    </div>
+
+    <div class="warning-card delete-card">
+        <p>
+            Are you sure you want to delete
+            <strong>@Model.DepartmentName</strong>?
+        </p>
+
+        @if (Model.Categories.Any())
+        {
+            <p class="validation-message">
+                This department cannot be deleted because it has
+                <strong>@Model.Categories.Count</strong> category/categories assigned to it.
+                Delete those categories first.
+            </p>
+            <a asp-action="Index" class="btn btn-secondary">Back to Departments</a>
+        }
+        else
+        {
+            <p>This action is permanent and cannot be undone.</p>
+
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="DepartmentId" />
+                <div class="button-row">
+                    <button type="submit" class="btn btn-danger">Delete Department</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        }
+    </div>
+</div>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -33,18 +33,24 @@
                     Stock Activity
                 </a>
 
-                @if (User.IsInRole("Manager"))
-                {
-                    <a asp-controller="EmployeeManagement"
-                       asp-action="Index">
-                        Employees
-                    </a>
-
-                    <a asp-controller="Reports"
-                       asp-action="Index">
-                        Reports
-                    </a>
-                }
+                    @if (User.IsInRole("Manager"))
+                    {
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle">Manager</button>
+                            <div class="nav-dropdown-menu">
+                                <a asp-controller="EmployeeManagement"
+                                   asp-action="Index">Employees</a>
+                                <a asp-controller="Reports"
+                                   asp-action="Index">Reports</a>
+                                <a asp-controller="Brands"
+                                   asp-action="Index">Brands</a>
+                                <a asp-controller="Categories"
+                                   asp-action="Index">Categories</a>
+                                <a asp-controller="Departments"
+                                   asp-action="Index">Departments</a>
+                            </div>
+                        </div>
+                    }
             }
 
             <partial name="_LoginPartial" />

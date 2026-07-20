@@ -171,22 +171,14 @@
     <article class="summary-card">
         <span>First Activity</span>
         <strong class="summary-date">
-            @(Model.FirstActivity.HasValue
-                ? Model.FirstActivity.Value
-                    .ToLocalTime()
-                    .ToString("MMM d, yyyy")
-                : "None")
+            @(Model.FirstActivity.HasValue? Model.FirstActivity.Value.ToLocalTime().ToString("MMM d, yyyy"): "None")
         </strong>
     </article>
 
     <article class="summary-card">
         <span>Most Recent Activity</span>
         <strong class="summary-date">
-            @(Model.LastActivity.HasValue
-                ? Model.LastActivity.Value
-                    .ToLocalTime()
-                    .ToString("MMM d, yyyy")
-                : "None")
+            @(Model.LastActivity.HasValue? Model.LastActivity.Value.ToLocalTime().ToString("MMM d, yyyy"): "None")
         </strong>
     </article>
 </section>
@@ -222,9 +214,7 @@
                 {
                     <tr>
                         <td>
-                            @transaction.TransactionDate
-                                .ToLocalTime()
-                                .ToString("MMM d, yyyy h:mm tt")
+                            @transaction.TransactionDate.ToLocalTime().ToString("MMM d, yyyy h:mm tt")
                         </td>
 
                         <td>

@@ -44,6 +44,56 @@ body {
     text-decoration: underline;
 }
 
+.nav-dropdown {
+    position: relative;
+}
+
+.nav-dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: white;
+    font: inherit;
+    cursor: pointer;
+    padding: 0;
+}
+
+.nav-dropdown-toggle:hover {
+    text-decoration: underline;
+}
+
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    padding-top: 0.5rem;
+    background: #1f2937;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.nav-dropdown-menu a {
+    display: block;
+    padding: 0.65rem 1rem;
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid #374151;
+}
+
+.nav-dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.nav-dropdown-menu a:hover {
+    background: #374151;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+    display: block;
+}
+
 .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -146,7 +196,7 @@ body {
 
 .inventory-table th,
 .inventory-table td {
-    padding: 0.9rem;
+    padding: 0.5rem;
     border-bottom: 1px solid #e5e7eb;
     text-align: left;
 }

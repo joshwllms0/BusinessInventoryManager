@@ -1,0 +1,49 @@
+@model BusinessInventoryManager.Models.Department
+
+@{
+    ViewData["Title"] = "Add Department";
+}
+
+<div class="form-page">
+    <div class="page-header">
+        <div>
+            <span class="eyebrow">Departments</span>
+            <h1>Add Department</h1>
+            <p>Create a new store department.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly"
+                 class="validation-summary"></div>
+
+            <div class="form-group">
+                <label asp-for="DepartmentName"></label>
+                <input asp-for="DepartmentName"
+                       placeholder="e.g. Frozen Foods" />
+                <span asp-validation-for="DepartmentName"
+                      class="validation-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description"
+                          rows="3"
+                          placeholder="Optional description"></textarea>
+                <span asp-validation-for="Description"
+                      class="validation-message"></span>
+            </div>
+
+            <div class="button-row">
+                <button type="submit" class="btn btn-primary">Save Department</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

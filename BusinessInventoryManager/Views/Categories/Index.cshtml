@@ -1,0 +1,69 @@
+@model IEnumerable<BusinessInventoryManager.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Manager Tools</span>
+        <h1>Categories</h1>
+        <p>Manage product categories organized by department.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">Add Category</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-error">@TempData["ErrorMessage"]</div>
+}
+
+<div class="table-card">
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Department</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var category in Model)
+                {
+                    <tr>
+                        <td><strong>@category.CategoryName</strong></td>
+                        <td>@category.Department.DepartmentName</td>
+                        <td>@(category.Description ?? "—")</td>
+                        <td>
+                            <div class="action-links">
+                                <a asp-action="Details"
+                                   asp-route-id="@category.CategoryId">Details</a>
+                                <a asp-action="Edit"
+                                   asp-route-id="@category.CategoryId">Edit</a>
+                                <a asp-action="Delete"
+                                   asp-route-id="@category.CategoryId"
+                                   class="danger-link">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="empty-message">
+                        No categories have been added yet.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,66 @@
+@model BusinessInventoryManager.Models.Brand
+
+@{
+    ViewData["Title"] = Model.BrandName;
+}
+
+<div class="page-header">
+    <div>
+        <span class="eyebrow">Brands</span>
+        <h1>@Model.BrandName</h1>
+        <p>@(Model.Description ?? "No description provided.")</p>
+    </div>
+    <div class="page-actions">
+        <a asp-action="Edit"
+           asp-route-id="@Model.BrandId"
+           class="btn btn-primary">Edit Brand</a>
+        <a asp-action="Index"
+           class="btn btn-secondary">Back to Brands</a>
+    </div>
+</div>
+
+<div class="table-card">
+    <h2>Products Using This Brand</h2>
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>SKU</th>
+                <th>Stock</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Products.Any())
+            {
+                foreach (var product in Model.Products.OrderBy(p => p.ProductName))
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Products"
+                               asp-action="Details"
+                               asp-route-id="@product.ProductId">
+                                @product.ProductName
+                            </a>
+                        </td>
+                        <td>@product.SKU</td>
+                        <td>
+                            <span class="stock-badge @(product.QuantityInStock <= product.ReorderLevel ? "stock-low" : "stock-normal")">
+                                @product.QuantityInStock
+                            </span>
+                        </td>
+                        <td>@product.UnitPrice.ToString("C")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="empty-message">
+                        No active products are assigned to this brand.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

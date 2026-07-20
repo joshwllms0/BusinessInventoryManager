@@ -98,9 +98,7 @@
         <div>
             <dt>Account Created</dt>
             <dd>
-                @Model.CreatedAt
-                    .ToLocalTime()
-                    .ToString("MMM d, yyyy h:mm tt")
+                @Model.CreatedAt.ToLocalTime().ToString("MMM d, yyyy h:mm tt")
             </dd>
         </div>
 
@@ -112,11 +110,7 @@
         <div>
             <dt>Most Recent Activity</dt>
             <dd>
-                @(Model.LastActivity.HasValue
-                    ? Model.LastActivity.Value
-                        .ToLocalTime()
-                        .ToString("MMM d, yyyy h:mm tt")
-                    : "No inventory activity")
+                @(Model.LastActivity.HasValue? Model.LastActivity.Value.ToLocalTime().ToString("MMM d, yyyy h:mm tt"): "No inventory activity")
             </dd>
         </div>
     </div>
@@ -160,9 +154,7 @@
                 {
                     <tr>
                         <td>
-                            @transaction.TransactionDate
-                                .ToLocalTime()
-                                .ToString("g")
+                            @transaction.TransactionDate.ToLocalTime().ToString("g")
                         </td>
 
                         <td>
