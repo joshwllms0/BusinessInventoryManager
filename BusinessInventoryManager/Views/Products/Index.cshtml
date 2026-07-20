@@ -1,4 +1,4 @@
-@model IEnumerable<BusinessInventoryManager.Models.Product>
+﻿@model IEnumerable<BusinessInventoryManager.Models.Product>
 
 @{
     ViewData["Title"] = "Products";
@@ -124,3 +124,30 @@
         </tbody>
     </table>
 </div>
+@if (ViewBag.TotalPages > 1)
+{
+    <div class="pagination">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <a asp-action="Index"
+               asp-route-page="@(ViewBag.CurrentPage - 1)"
+               class="page-btn">← Prev</a>
+        }
+
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            <a asp-action="Index"
+               asp-route-page="@i"
+               class="page-btn @(i == ViewBag.CurrentPage ? "page-btn-active" : "")">
+                @i
+            </a>
+        }
+
+        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+        {
+            <a asp-action="Index"
+               asp-route-page="@(ViewBag.CurrentPage + 1)"
+               class="page-btn">Next →</a>
+        }
+    </div>
+}

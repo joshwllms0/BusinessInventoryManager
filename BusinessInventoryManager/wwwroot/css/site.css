@@ -106,6 +106,36 @@ body {
     color: #6b7280;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+}
+
+.page-btn {
+    display: inline-block;
+    padding: 0.45rem 0.85rem;
+    border-radius: 6px;
+    background: #e5e7eb;
+    color: #111827;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.page-btn:hover {
+    background: #d1d5db;
+}
+
+.page-btn-active {
+    background: #2563eb;
+    color: white;
+}
+
+.page-btn-active:hover {
+    background: #1d4ed8;
+}
+
 .hero {
     background: white;
     border-radius: 14px;

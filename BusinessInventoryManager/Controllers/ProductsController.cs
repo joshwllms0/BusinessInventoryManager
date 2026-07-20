@@ -18,15 +18,27 @@ namespace BusinessInventoryManager.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var products = await _context.Products
+            const int pageSize = 10;
+
+            var query = _context.Products
                 .Include(product => product.Brand)
                 .Include(product => product.Category)
                     .ThenInclude(category => category.Department)
                 .Where(product => product.IsActive)
-                .OrderBy(product => product.ProductName)
+                .OrderBy(product => product.ProductName);
+
+            int totalItems = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var products = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
 
             return View(products);
         }
